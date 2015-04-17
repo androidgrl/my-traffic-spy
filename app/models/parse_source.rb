@@ -3,7 +3,7 @@ module TrafficSpy
     attr_reader :source
 
     def initialize(params)
-      @source = Source.new(
+      @source = Source.create(
         identifier: params[:identifier],
         root_url: params[:rootUrl]
       )
@@ -13,7 +13,6 @@ module TrafficSpy
       if @source[:identifier].nil? || @source[:root_url].nil?
         400
       elsif @source.valid?
-        @source.save
         200
       else
         403
