@@ -9,7 +9,7 @@ module TrafficSpy
     end
 
     post '/sources' do
-      parsed_source = ParseSource.new(params)
+     parsed_source = ParseSource.new(params)
      body parsed_source.body
      status parsed_source.status
     end
