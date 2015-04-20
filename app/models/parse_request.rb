@@ -8,12 +8,6 @@ module TrafficSpy
       else
         @data = JSON.parse(params[:payload])
       end
-      @request = Request.create(
-        url: @data["url"],
-        requested_at: @data["requestedAt"],
-        responded_in: @data["respondedIn"],
-        ip: @data["ip"]
-      )
       @identifier = identifier
     end
 
@@ -23,6 +17,12 @@ module TrafficSpy
       elsif duplicate_request? || no_existing_identifier?
         403
       else
+       @request = Request.create(
+        url: @data["url"],
+        requested_at: @data["requestedAt"],
+        responded_in: @data["respondedIn"],
+        ip: @data["ip"]
+      )
         200
       end
     end
@@ -38,7 +38,7 @@ module TrafficSpy
     end
 
     def duplicate_request?
-      Request.find_by(requested_at: @data["requested_at"], ip: @data["ip"]) != nil?
+      Request.find_by(requested_at: @data["requestedAt"], ip: @data["ip"]) != nil
     end
 
     def no_existing_identifier?

@@ -29,22 +29,26 @@ class RequestControllerTest < MiniTest::Test
     assert_equal "Missing information", last_response.body
   end
 
-  def test_it_returns_403_when_payload_already_exists
+  def test_it_returns_403_when_duplicate_request
     source = TrafficSpy::Source.create(identifier: 'poptarts', root_url: "http://www.poptarts.com")
-    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requested_at": "10:20"}'
-    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requested_at": "10:20"}'
+    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20"}'
+    assert_equal 200, last_response.status
+    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20"}'
     assert_equal 403, last_response.status
     assert_equal "Oops...Either you made a Duplicate request, or the Account doesn't exist", last_response.body
   end
 
   def test_it_returns_403_when_identifier_doesnt_exist
-    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requested_at": "10:20"}'
+    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20"}'
     assert_equal 403, last_response.status
     assert_equal "Oops...Either you made a Duplicate request, or the Account doesn't exist", last_response.body
   end
 
   def test_it_returns_200_when_request_successfully_made
-
+    source = TrafficSpy::Source.create(identifier: 'poptarts', root_url: "http://www.poptarts.com")
+    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20"}'
+    assert_equal 200, last_response.status
+    assert_equal "Request successfully accepted", last_response.body
   end
 end
 
