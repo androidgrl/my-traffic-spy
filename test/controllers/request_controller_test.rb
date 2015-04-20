@@ -15,11 +15,19 @@ class RequestControllerTest < MiniTest::Test
     DatabaseCleaner.clean
   end
 
-  def test_it_returns_400_when_the_payload_is_missing
+  def test_it_returns_400_when_the_payload_is_empty_hash
     source = TrafficSpy::Source.create(identifier: 'poptarts', root_url: "http://www.poptarts.com")
     post '/sources/poptarts/data', 'payload={}'
     assert_equal 400, last_response.status
     assert_equal "Missing information", last_response.body
+  end
+
+  def test_it_returns_400_when_payload_is_missing
+    source = TrafficSpy::Source.create(identifier: 'poptarts', root_url: "http://www.poptarts.com")
+    post '/sources/poptarts/data'
+    assert_equal 400, last_response.status
+    assert_equal "Missing information", last_response.body
+
   end
 
   def test_it_returns_403_when_payload_already_exists

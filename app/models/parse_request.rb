@@ -3,10 +3,14 @@ module TrafficSpy
     attr_reader :request
 
     def initialize(params, identifier)
-      data = JSON.parse(params[:payload])
+      if params[:payload].present? == false
+        data = {}
+      else
+        data = JSON.parse(params[:payload])
+      end
       @request = Request.create(
         url: data["url"]
-        )
+      )
       @identifier = identifier
     end
 
