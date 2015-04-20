@@ -28,10 +28,34 @@ class ParseSourceTest < MiniTest::Test
   end
 
   def test_it_is_invalid_when_identifier_already_exists
-    source = TrafficSpy::ParseSource.new ({"identifier" => "JamieK", "rootUrl" => "http://www.jamiek.com"})
-    source.source.save
-#    assert_equal 403, source.status
+    source = TrafficSpy::ParseSource.new({"identifier" => "JamieK", "rootUrl" => "http://www.jamiek.com"})
+     source = TrafficSpy::ParseSource.new({"identifier" => "JamieK", "rootUrl" => "http://www.jamiek.com"})
+    assert_equal 403, source.status
     assert_equal "Your account already exists", source.body
-
   end
+
+  def test_it_is_valid_when_all_fields_present
+    source = TrafficSpy::ParseSource.new({"identifier" => "JamieK", "rootUrl" => "http://www.jamiek.com"})
+    assert_equal 200, source.status
+    assert_equal "Welcome to Traffic Spy!  Your account is successfully registered!", source.body
+  end
+
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

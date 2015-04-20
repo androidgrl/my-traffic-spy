@@ -14,6 +14,12 @@ module TrafficSpy
      status parsed_source.status
     end
 
+    post '/sources/:identifier/data' do
+     request = Request.new(JSON.parse(params[:payload]), params[:identifier])
+     body request.body
+     status request.status
+    end
+
     not_found do
       erb :error
     end

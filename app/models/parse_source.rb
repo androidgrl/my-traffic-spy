@@ -4,12 +4,13 @@ module TrafficSpy
 
     def initialize(params)
       @source = Source.create(
-        identifier: params[:identifier],
-        root_url: params[:rootUrl]
+        identifier: params["identifier"],
+        root_url: params["rootUrl"]
       )
     end
 
     def status
+
       if @source[:identifier].nil? || @source[:root_url].nil?
         400
       elsif @source.valid?
