@@ -7,14 +7,6 @@ class RegisterApplicationTest < MiniTest::Test
     TrafficSpy::Server
   end
 
-  def setup
-    DatabaseCleaner.start
-  end
-
-  def teardown
-    DatabaseCleaner.clean
-  end
-
   def test_it_returns_400_when_identifier_is_missing
     post '/sources', {"rootUrl" => "http://jumpstartlab.com" }
 

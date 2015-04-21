@@ -8,9 +8,10 @@ require 'minitest/autorun'
 require 'capybara'
 require 'minitest/pride'
 require 'database_cleaner'
+require "byebug"
 
 Capybara.app = TrafficSpy::Server
-DatabaseCleaner.strategy = :truncation, {except: %w[public.schema_migrations]}
+DatabaseCleaner.strategy = :transaction
 
 class MiniTest::Test
   include Capybara::DSL

@@ -7,14 +7,6 @@ class RequestControllerTest < MiniTest::Test
     TrafficSpy::Server
   end
 
-  def setup
-    DatabaseCleaner.start
-  end
-
-  def teardown
-    DatabaseCleaner.clean
-  end
-
   def test_it_returns_400_when_the_payload_is_empty_hash
     source = TrafficSpy::Source.create(identifier: 'poptarts', root_url: "http://www.poptarts.com")
     post '/sources/poptarts/data', 'payload={}'
@@ -45,10 +37,12 @@ class RequestControllerTest < MiniTest::Test
   end
 
   def test_it_returns_200_when_request_successfully_made
-    source = TrafficSpy::Source.create(identifier: 'poptarts', root_url: "http://www.poptarts.com")
-    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20"}'
-    assert_equal 200, last_response.status
+    assert_equal 0, TrafficSpy::Request.all.count
+    source = TrafficSpy::Source.create(identifier: 'blue', root_url: "http://www.blue.com")
+    post '/sources/blue/data', 'payload={"ip": "4.3.2.1", "requestedAt": "10:10"}'
     assert_equal "Request successfully accepted", last_response.body
+    assert_equal 200, last_response.status
+    assert_equal 1, TrafficSpy::Request.all.count
   end
 end
 
