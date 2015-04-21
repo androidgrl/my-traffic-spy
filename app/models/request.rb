@@ -3,34 +3,12 @@ module TrafficSpy
     belongs_to :source
     belongs_to :user_agent
 
-    #def initialize(payload, identifier)
-      #@request = Request.create(url:  payload[:url],  identifier: identifier)
-      #@payload = payload
-      #@identifier = identifier
-    #end
+    #def self.urls
+      ##i want to get all the requests
+      ##from each request i want to count how may times a specific url occurs
+      ##then i want to list those urls in descending order
+      #Request.all.
 
-    #def body
-      #if status == 400
-        #"Missing information"
-      #end
-    #end
-
-    #def status
-      #if @payload.nil? || @payload=={}
-        #400
-      #elsif url_results.count > 0 && requested_at_results > 0
-        #403
-      #end
-    #end
-
-    #def url_results
-      #results = []
-      #results << Request.find_by(url: @payload[:url])
-    #end
-
-    #def requested_at_results
-      #results = []
-      #results << Request.find_by(requested_at: @payload[:requested_at])
     #end
   end
 end

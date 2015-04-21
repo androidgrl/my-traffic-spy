@@ -22,6 +22,7 @@ module TrafficSpy
 
     get '/sources/:identifier' do |identifier|
       if Source.where(identifier: identifier).count > 0
+       # @urls = Request.urls
         erb :dashboard
       else
         erb :error
