@@ -20,8 +20,12 @@ module TrafficSpy
       body parsed_request.body
     end
 
-    get '/sources/:identifier' do
-      erb :error
+    get '/sources/:identifier' do |identifier|
+      if Source.where(identifier: identifier).count > 0
+        erb :dashboard
+      else
+        erb :error
+      end
     end
 
     not_found do
