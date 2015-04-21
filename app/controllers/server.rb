@@ -20,6 +20,10 @@ module TrafficSpy
       body parsed_request.body
     end
 
+    get '/sources/:identifier' do
+      erb :error
+    end
+
     not_found do
       erb :error
     end

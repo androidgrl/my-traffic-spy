@@ -1,7 +1,5 @@
 module TrafficSpy
   class ParsedRequest
-    #attr_reader :request
-
     def initialize(params, identifier)
       if params[:payload].present? == false
         @data = {}
