@@ -23,9 +23,9 @@ class RequestControllerTest < MiniTest::Test
 
   def test_it_returns_403_when_duplicate_request
     source = TrafficSpy::Source.create(identifier: 'poptarts', root_url: "http://www.poptarts.com")
-    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20"}'
+    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20", "requestType": "GET"}'
     assert_equal 200, last_response.status
-    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20"}'
+    post '/sources/poptarts/data', 'payload={"ip": "1.2.3.4", "requestedAt": "10:20", "requestType": "GET"}'
     assert_equal 403, last_response.status
     assert_equal "Oops...Either you made a Duplicate request, or the Account doesn't exist", last_response.body
   end

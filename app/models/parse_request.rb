@@ -71,7 +71,7 @@ module TrafficSpy
     end
 
     def duplicate_request?
-      Request.where(requested_at: @data["requestedAt"], ip: @data["ip"]).count > 0
+      Request.where(requested_at: @data["requestedAt"], ip: @data["ip"], request_type: @data["requestType"]).count > 0
     end
 
     def no_existing_identifier?
