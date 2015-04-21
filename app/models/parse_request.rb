@@ -37,10 +37,10 @@ module TrafficSpy
           request_type: @data["requestType"],
           parameters: @data["parameters"],
           event_name: @data["eventName"],
-          #user_agent_id: UserAgent.find_or_create_by(
-            #browser: find_or_create_browser,
-            #operating_system: find_or_create_operating_system
-          #).id
+          user_agent_id: UserAgent.find_or_create_by(
+            browser: find_or_create_browser,
+            operating_system: find_or_create_operating_system
+          ).id,
           resolution_width: @data["resolutionWidth"],
           resolution_height: @data["resolutionHeight"],
           ip: @data["ip"],
@@ -61,7 +61,15 @@ module TrafficSpy
     end
 
     def parse_browser_name
-      @data["userAgent"]
+      json_string = @data["userAgent"]
+      user_agent = ::UserAgent.parse(json_string)
+      user_agent.browser
+    end
+
+    def parse_operating_system_name
+      json_string = @data["userAgent"]
+      user_agent = ::UserAgent.parse(json_string)
+      user_agent.platform
     end
 
     def duplicate_request?
