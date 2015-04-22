@@ -24,7 +24,8 @@ module TrafficSpy
       if Source.where(identifier: identifier).count > 0
         urls = Request.urls(identifier)
         browsers = Request.browsers(identifier)
-        erb :dashboard, :locals => {:urls => urls, :browsers => browsers}
+        operating_systems = Request.operating_systems(identifier)
+        erb :dashboard, :locals => {:urls => urls, :browsers => browsers, :operating_systems => operating_systems}
       else
         erb :error
       end

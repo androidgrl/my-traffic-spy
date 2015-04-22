@@ -26,7 +26,28 @@ module TrafficSpy
       user_agent_objects = user_agent_ids.map {|id| UserAgent.find(id)}
       browser_ids = user_agent_objects.map {|user_agent| user_agent.browser_id }
 
-      browsers = browser_ids.map {|id| Browser.find(id) }
+      browser_names = browser_ids.map {|id| Browser.find(id).name }
+    end
+
+    def self.operating_systems(identifier)
+
+      request_objects = Request.where(source_id: Source.find_by(identifier: identifier).id)
+      user_agent_ids = request_objects.all.map {|request_object| request_object.user_agent_id }
+      user_agent_objects = user_agent_ids.map {|id| UserAgent.find(id)}
+      operating_system_ids = user_agent_objects.map {|user_agent| user_agent.operating_system_id }
+
+      operating_system_names = operating_system_ids.map {|id| OperatingSystem.find(id).name }
     end
   end
 end
+
+
+
+
+
+
+
+
+
+
+
