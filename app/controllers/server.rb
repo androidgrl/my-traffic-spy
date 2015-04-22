@@ -22,8 +22,9 @@ module TrafficSpy
 
     get '/sources/:identifier' do |identifier|
       if Source.where(identifier: identifier).count > 0
-        @urls = Request.urls(identifier)
-        erb :dashboard
+        urls = Request.urls(identifier)
+        browsers = Request.browsers(identifier)
+        erb :dashboard, :locals => {:urls => urls, :browsers => browsers}
       else
         erb :error
       end
