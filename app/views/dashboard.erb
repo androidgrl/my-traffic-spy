@@ -1,6 +1,11 @@
 <div id="welcome">
-  <h1>Welcome to Traffic Spy! Here is your account overview:</h1>
+<h1>Welcome to Traffic Spy! Here is your account overview:</h1>
 </div>
 <div id="urls">
-  <h2>Most requested URL's:</h2>
+  <h2>Top requested URL's:</h2>
+  <% @urls.each_with_index do |url, index| %>
+    <ul>
+      <li><%= index+1 %>:  <%= url %></li>
+    </ul>
+  <% end %>
 </div>
