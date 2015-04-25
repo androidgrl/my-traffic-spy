@@ -56,6 +56,26 @@ module TrafficSpy
       urls_and_times = urls.zip(average_times)
       sorted_urls_and_times = urls_and_times.sort_by {|x,y| y}.reverse
     end
+
+
+    def self.sorted_times(identifier, relative_path)
+      root_url = Source.find_by(identifier: identifier).root_url
+      request_objects = Request.where(url: "#{root_url}/#{relative_path}")
+      sorted_times = request_objects.map { |request| request.responded_in }.sort
+    end
+
+    def self.longest_response_time(identifier, relative_path)
+      self.sorted_times(identifier, relative_path).last
+    end
+
+    def self.shortest_response_time(identifier, relative_path)
+      self.sorted_times(identifier, relative_path).first
+    end
+
+    def self.average_response_time(identifier, relative_path)
+      array = self.sorted_times(identifier, relative_path)
+      average = array.reduce(0, :+) / array.length
+    end
   end
 end
 

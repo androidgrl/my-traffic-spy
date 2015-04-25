@@ -48,7 +48,25 @@ class UrlStatPageTest < MiniTest::Test
 
     visit '/sources/mrs_client/urls/blog'
     within("#longest") do
-      assert page.has_content?("Longest Response Time:")
+      assert page.has_content?("Longest Response Time: 33")
+    end
+  end
+
+  def test_it_shows_shortest_response_time
+    create_requests
+
+    visit '/sources/mrs_client/urls/blog'
+    within("#shortest") do
+      assert page.has_content?("Shortest Response Time: 31")
+    end
+  end
+
+  def test_it_shows_average_response_time
+    create_requests
+
+    visit '/sources/mrs_client/urls/blog'
+    within("#average") do
+      assert page.has_content?("Average Response Time: 32")
     end
   end
 end
