@@ -17,11 +17,11 @@ class DashboardPageTest < MiniTest::Test
 
     user_agent = TrafficSpy::UserAgent.create(browser_id: TrafficSpy::Browser.find_by(name: "chrome").id, operating_system_id: TrafficSpy::OperatingSystem.find_by(name: "mac").id)
 
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 31)
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 32)
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 33)
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 31, resolution_width: 600, resolution_height: 800)
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 32, resolution_width: 600, resolution_height: 800)
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 33, resolution_width: 600, resolution_height: 800)
 
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/contact", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 30)
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/contact", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 30, resolution_width: 600, resolution_height: 800)
   end
 
   def test_the_user_sees_an_error_message_when_there_is_no_identifier
@@ -65,19 +65,23 @@ class DashboardPageTest < MiniTest::Test
   end
 
   def test_the_user_sees_screen_resolution_breakdown_for_all_requests
-    TrafficSpy::Source.create(identifier: "mrs_client", root_url: "http://www.mrs_client.com")
+    create_requests
 
     visit '/sources/mrs_client'
     within('#screen_resolutions') do
       assert page.has_content?("Screen Resolutions Used")
+      assert page.has_content?("Width: 600, Height: 800")
     end
   end
 
   def test_the_user_sees_average_response_times_breakdown_for_all_requests
-    TrafficSpy::Source.create(identifier: "mrs_client", root_url: "http://www.mrs_client.com")
+    create_requests
+
     visit '/sources/mrs_client'
     within('#avg_response_times') do
       assert page.has_content?("Average Response Time for each URL:")
+      assert page.has_content?("http://www.mrs_client.com/blog, 32")
+      assert page.has_content?("http://www.mrs_client.com/contact, 30")
     end
   end
 
