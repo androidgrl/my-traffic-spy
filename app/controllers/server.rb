@@ -33,6 +33,15 @@ module TrafficSpy
       end
     end
 
+    get '/sources/:identifier/urls/:relative_path' do |identifier, relative_path|
+      root_url = Source.find_by(identifier: identifier).root_url
+      if Request.where(url: "#{root_url}/#{relative_path}").count > 0
+        erb :url_stats, :locals => {:root_url => root_url, :identifier => identifier, :relative_path => relative_path }
+      else
+        erb :error
+      end
+    end
+
     not_found do
       erb :error
     end
