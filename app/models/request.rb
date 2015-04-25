@@ -54,6 +54,7 @@ module TrafficSpy
         array.reduce(0, :+) / array.length
       end
       urls_and_times = urls.zip(average_times)
+      sorted_urls_and_times = urls_and_times.sort_by {|x,y| y}.reverse
     end
   end
 end

@@ -1,3 +1,5 @@
+require 'uri'
+
 <div id="welcome">
 <h1>Welcome to Traffic Spy! Here is your account overview:</h1>
 </div>
@@ -41,7 +43,15 @@
     </ul>
   <% end %>
 </div>
-
+<div id="links">
+  <h2>Url Specific data:</h2>
+  <% urls.sort.each do |url| %>
+    <% path = URI( url ).path %>
+    <ul>
+      <li><a href='/sources/<%= identifier %>/urls<%= path %>'><%= url %></a></li>
+    </ul>
+  <% end %>
+</div>
 
 
 

@@ -27,7 +27,7 @@ module TrafficSpy
         operating_systems = Request.operating_systems(identifier)
         screen_resolutions = Request.screen_resolutions(identifier)
         avg_response_times = Request.avg_response_times(identifier)
-        erb :dashboard, :locals => {:urls => urls, :browsers => browsers, :operating_systems => operating_systems, :screen_resolutions => screen_resolutions, :avg_response_times => avg_response_times }
+        erb :dashboard, :locals => {:urls => urls, :browsers => browsers, :operating_systems => operating_systems, :screen_resolutions => screen_resolutions, :avg_response_times => avg_response_times, :identifier => identifier }
       else
         erb :error
       end
