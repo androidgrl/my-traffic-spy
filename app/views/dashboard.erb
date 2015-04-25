@@ -17,11 +17,40 @@
     </ul>
   <% end %>
 </div>
-<div>
+<div id="operating_systems">
   <h2>Operating Systems Used:</h2>
   <% operating_systems.each do |os| %>
     <ul>
       <li><%= os %></li>
     </ul>
-    <% end %>
+  <% end %>
 </div>
+<div id="screen_resolutions">
+  <h2>Screen Resolutions Used:</h2>
+  <% screen_resolutions.each do |width, height| %>
+    <ul>
+      <li>Width: <%= width %>, Height: <%= height %></li>
+    </ul>
+  <% end %>
+</div>
+<div id="avg_response_times">
+  <h2>Average Response Time for each URL:</h2>
+  <% avg_response_times.each do |url, time| %>
+    <ul>
+      <li><%= url %>, <%= time %></li>
+    </ul>
+  <% end %>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
