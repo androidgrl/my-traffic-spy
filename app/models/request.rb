@@ -113,6 +113,13 @@ module TrafficSpy
       ranked_user_agents = ranked_user_agent_ids.map {|id| UserAgent.find(id)}
       ranked_info = ranked_user_agents.map {|agent| "#{Browser.find(agent.browser_id).name}, #{OperatingSystem.find(agent.operating_system_id).name}"}
     end
+
+    def self.has_events?(identifier)
+      source_id = Source.find_by(identifier: identifier).id
+      requests = Request.where(source_id: source_id)
+      events = requests.map {|request| request.event_name}
+      events.compact.count > 0
+    end
   end
 end
 

@@ -63,6 +63,14 @@ module TrafficSpy
       end
     end
 
+    get '/sources/:identifier/events' do |identifier|
+      if Request.has_events?(identifier)
+        erb :events_index, :locals => {:identifier => identifier}
+      else
+        erb :events_index_error
+      end
+    end
+
     not_found do
       erb :error
     end

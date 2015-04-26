@@ -10,14 +10,14 @@ class DashboardPageTest < MiniTest::Test
   end
 
   def create_requests
-     TrafficSpy::Source.create(identifier: "mrs_client", root_url: "http://www.mrs_client.com")
+    TrafficSpy::Source.create(identifier: "mrs_client", root_url: "http://www.mrs_client.com")
 
     TrafficSpy::Browser.create(name: "chrome")
     TrafficSpy::OperatingSystem.create(name: "mac")
 
     user_agent = TrafficSpy::UserAgent.create(browser_id: TrafficSpy::Browser.find_by(name: "chrome").id, operating_system_id: TrafficSpy::OperatingSystem.find_by(name: "mac").id)
 
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 31, resolution_width: 600, resolution_height: 800)
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 31, resolution_width: 600, resolution_height: 800, event_name: "TestingError")
     TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 32, resolution_width: 600, resolution_height: 800)
     TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 33, resolution_width: 600, resolution_height: 800)
 
@@ -96,5 +96,28 @@ class DashboardPageTest < MiniTest::Test
 
     click_link_or_button("http://www.mrs_client.com/blog")
     assert_equal '/sources/mrs_client/urls/blog', current_path
+  end
+
+  def test_the_user_sees_link_to_events_index
+    create_requests
+
+    visit '/sources/mrs_client'
+    within('#events') do
+      assert page.has_content?("Events Index:")
+    end
+
+    click_link_or_button("click to view Events Index")
+    assert_equal '/sources/mrs_client/events', current_path
+  end
+
+  def test_the_user_sees_an_error_page_when_there_are_no_events_defined
+    TrafficSpy::Source.create(identifier: "mrs_client", root_url: "http://www.mrs_client.com")
+
+    assert_equal 0, TrafficSpy::Request.all.count
+    visit '/sources/mrs_client'
+    click_link_or_button("click to view Events Index")
+    within('#events_index_error') do
+      assert page.has_content?("No Events have been defined for this account")
+    end
   end
 end
