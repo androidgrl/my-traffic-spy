@@ -115,10 +115,18 @@ module TrafficSpy
     end
 
     def self.has_events?(identifier)
+      self.events(identifier).count > 0
+    end
+
+    def self.events(identifier)
       source_id = Source.find_by(identifier: identifier).id
       requests = Request.where(source_id: source_id)
-      events = requests.map {|request| request.event_name}
-      events.compact.count > 0
+      events = requests.map {|request| request.event_name}.compact
+      hash_with_frequency_as_values = events.each_with_object(Hash.new(0)) do |event, hash|
+        hash[event] += 1
+      end
+      sorted_hash = hash_with_frequency_as_values.sort_by {|key, value| value}.reverse
+      ranked_events = sorted_hash.map {|pair| pair.first}
     end
   end
 end

@@ -33,7 +33,7 @@ module TrafficSpy
                                     :screen_resolutions => screen_resolutions,
                                     :avg_response_times => avg_response_times,
                                     :identifier => identifier
-                                    }
+        }
       else
         erb :error
       end
@@ -57,7 +57,7 @@ module TrafficSpy
                                     :http_verbs => http_verbs,
                                     :popular_referrers => popular_referrers,
                                     :popular_user_agents => popular_user_agents
-                                    }
+        }
       else
         erb :error
       end
@@ -65,7 +65,10 @@ module TrafficSpy
 
     get '/sources/:identifier/events' do |identifier|
       if Request.has_events?(identifier)
-        erb :events_index, :locals => {:identifier => identifier}
+        events = Request.events(identifier)
+        erb :events_index, :locals => {:identifier => identifier,
+                                       :events => events
+        }
       else
         erb :events_index_error
       end

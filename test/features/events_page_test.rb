@@ -25,11 +25,10 @@ class EventsPageTest < MiniTest::Test
   end
 
   def test_the_user_sees_links_to_individal_events_ranked_in_descending_order_by_amount_received
-    skip
     create_requests
 
     visit '/sources/mrs_client/events'
-    within('#index') do
+    within('#events_index') do
       assert page.has_content?("Events Index Ranked by most Popular:
                                1.  SocialLogin
                                2.  ContactEmail")

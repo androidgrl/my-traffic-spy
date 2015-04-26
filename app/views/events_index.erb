@@ -1,3 +1,9 @@
 <div id="events_index">
-<h1>Events Index:</h1>
+<h1>Events Index Ranked by most Popular:</h1>
+<% events.each_with_index do |event, index| %>
+  <ul>
+    <li><%= index+1 %>.  <a href=""><%= event %></a></li>
+  </ul>
+<% end %>
 </div>
+
