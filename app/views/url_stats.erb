@@ -12,6 +12,9 @@
 </div>
 <div id="verbs">
   <h2>HTTP Verbs Used:</h2>
+  <% http_verbs.each do |verb| %>
+    <h3><%= verb %></h3>
+  <% end %>
 </div>
 <div id="referrers">
   <h2>Most Popular Referrers:</h2>

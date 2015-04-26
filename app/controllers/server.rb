@@ -45,7 +45,7 @@ module TrafficSpy
         longest_response_time = Request.longest_response_time(identifier, relative_path)
         shortest_response_time = Request.shortest_response_time(identifier, relative_path)
         average_response_time = Request.average_response_time(identifier, relative_path)
-        #http_verbs = Request.http_verbs(identifier, relative_path)
+        http_verbs = Request.http_verbs(identifier, relative_path)
         #popular_referrers = Request.popular_referrers(identifier, relative_path)
         #popular_user_agents = Request.popular_user_agents(identifier, relative_path)
         erb :url_stats, :locals => {:root_url => root_url,
@@ -54,7 +54,7 @@ module TrafficSpy
                                     :longest_response_time => longest_response_time,
                                     :shortest_response_time => shortest_response_time,
                                     :average_response_time => average_response_time,
-                                    #:http_verbs => http_verbs,
+                                    :http_verbs => http_verbs,
                                     #:popular_referrers => popular_referrers,
                                     #:popular_user_agents => popular_user_agents
                                     }

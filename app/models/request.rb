@@ -76,6 +76,12 @@ module TrafficSpy
       array = self.sorted_times(identifier, relative_path)
       average = array.reduce(0, :+) / array.length
     end
+
+    def self.http_verbs(identifier, relative_path)
+      root_url = Source.find_by(identifier: identifier).root_url
+      request_objects = Request.where(url: "#{root_url}/#{relative_path}")
+      verbs = request_objects.map { |request| request.request_type }.uniq
+    end
   end
 end
 
