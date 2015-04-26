@@ -14,14 +14,16 @@ class UrlStatPageTest < MiniTest::Test
 
     TrafficSpy::Browser.create(name: "chrome")
     TrafficSpy::OperatingSystem.create(name: "mac")
+    TrafficSpy::OperatingSystem.create(name: "windows")
 
-    user_agent = TrafficSpy::UserAgent.create(browser_id: TrafficSpy::Browser.find_by(name: "chrome").id, operating_system_id: TrafficSpy::OperatingSystem.find_by(name: "mac").id)
+    user_agent_1 = TrafficSpy::UserAgent.create(browser_id: TrafficSpy::Browser.find_by(name: "chrome").id, operating_system_id: TrafficSpy::OperatingSystem.find_by(name: "mac").id)
+    user_agent_2 = TrafficSpy::UserAgent.create(browser_id: TrafficSpy::Browser.find_by(name: "chrome").id, operating_system_id: TrafficSpy::OperatingSystem.find_by(name: "windows").id)
 
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 31, resolution_width: 600, resolution_height: 800, request_type: "GET" )
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 32, resolution_width: 600, resolution_height: 800, request_type: "GET")
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 33, resolution_width: 600, resolution_height: 800, request_type: "POST")
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent_1.id, responded_in: 31, resolution_width: 600, resolution_height: 800, request_type: "GET", referred_by: "http://www.mrs_client.com" )
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent_1.id, responded_in: 32, resolution_width: 600, resolution_height: 800, request_type: "GET", referred_by: "http://www.mrs_client.com")
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/blog", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent_2.id, responded_in: 33, resolution_width: 600, resolution_height: 800, request_type: "POST", referred_by: "http://www.google.com")
 
-    TrafficSpy::Request.create(url: "http://www.mrs_client.com/contact", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent.id, responded_in: 30, resolution_width: 600, resolution_height: 800, request_type: "GET")
+    TrafficSpy::Request.create(url: "http://www.mrs_client.com/contact", ip: "1", source_id: TrafficSpy::Source.find_by(identifier: "mrs_client").id, user_agent_id: user_agent_1.id, responded_in: 30, resolution_width: 600, resolution_height: 800, request_type: "GET")
   end
 
 
@@ -78,6 +80,28 @@ class UrlStatPageTest < MiniTest::Test
       assert page.has_content?("HTTP Verbs Used:
                                GET
                                POST")
+    end
+  end
+
+  def test_it_shows_popular_referrers
+    create_requests
+
+    visit '/sources/mrs_client/urls/blog'
+    within("#referrers") do
+      assert page.has_content?("Most Popular Referrers:
+                               1.  http://www.mrs_client.com
+                               2.  http://www.google.com")
+    end
+  end
+
+  def test_it_shows_popular_user_agents
+    create_requests
+
+    visit '/sources/mrs_client/urls/blog'
+    within("#agents") do
+      assert page.has_content?("Most Popular User Agents:
+                               1.  chrome, mac
+                               2.  chrome, windows")
     end
   end
 end

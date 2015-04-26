@@ -82,6 +82,37 @@ module TrafficSpy
       request_objects = Request.where(url: "#{root_url}/#{relative_path}")
       verbs = request_objects.map { |request| request.request_type }.uniq
     end
+
+    def self.popular_referrers(identifier, relative_path)
+      root_url = Source.find_by(identifier: identifier).root_url
+      request_objects = Request.where(url: "#{root_url}/#{relative_path}")
+      referrers = request_objects.map {|request| request.referred_by}
+      hash_with_frequency_as_values = referrers.each_with_object(Hash.new(0)) do |referrer, hash|
+        hash[referrer] += 1
+      end
+
+      sorted_hash = hash_with_frequency_as_values.sort_by {|key, value| value}.reverse
+
+      ranked_referrers = sorted_hash.map {|pair| pair.first}
+    end
+
+    def self.popular_user_agents(identifier, relative_path)
+      #from the request objects, map the user_agent_ids
+      #rank by frequency
+      #then map the browser and os for each
+      root_url = Source.find_by(identifier: identifier).root_url
+      request_objects = Request.where(url: "#{root_url}/#{relative_path}")
+      user_agent_ids = request_objects.map {|request| request.user_agent_id}
+      hash_with_frequency_as_values = user_agent_ids.each_with_object(Hash.new(0)) do |id, hash|
+        hash[id] += 1
+      end
+
+      sorted_hash = hash_with_frequency_as_values.sort_by {|key, value| value}.reverse
+
+      ranked_user_agent_ids = sorted_hash.map {|pair| pair.first}
+      ranked_user_agents = ranked_user_agent_ids.map {|id| UserAgent.find(id)}
+      ranked_info = ranked_user_agents.map {|agent| "#{Browser.find(agent.browser_id).name}, #{OperatingSystem.find(agent.operating_system_id).name}"}
+    end
   end
 end
 

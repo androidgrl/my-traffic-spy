@@ -18,7 +18,13 @@
 </div>
 <div id="referrers">
   <h2>Most Popular Referrers:</h2>
+  <% popular_referrers.each_with_index do |referrer, index| %>
+    <h3><%= index+1 %>.  <%= referrer %></h3>
+  <% end %>
 </div>
 <div id="agents">
   <h2>Most Popular User Agents:</h2>
+  <% popular_user_agents.each_with_index do |agent, index| %>
+    <h3><%= index+1 %>.  <%= agent %></h3>
+  <% end %>
 </div>
