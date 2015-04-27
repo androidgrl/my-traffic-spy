@@ -135,6 +135,11 @@ module TrafficSpy
       end
       sorted_hash = hash_with_frequency_as_values.sort_by {|key, value| key}
     end
+
+
+    def self.total_events(identifier, event_name)
+      self.request_objects(identifier).select {|request| request.event_name == event_name}.count
+    end
   end
 end
 

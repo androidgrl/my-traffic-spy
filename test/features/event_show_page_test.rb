@@ -42,6 +42,15 @@ class EventShowPageTest < MiniTest::Test
                                ")
     end
   end
+
+  def test_the_user_sees_total_number_of_requests
+    create_requests
+
+    visit "/sources/mrs_client/events/SocialLogin"
+    within("#total") do
+      assert page.has_content?("Total Events:  3")
+    end
+  end
 end
 
 

@@ -75,9 +75,11 @@ module TrafficSpy
 
     get '/sources/:identifier/events/:event_name' do |identifier, event_name|
       event_times_hash = Request.event_times_hash(identifier, event_name)
+      total_events = Request.total_events(identifier, event_name)
       erb :event_show_page, :locals => {:event_name => event_name,
                                         :identifier => identifier,
-                                        :event_times_hash => event_times_hash}
+                                        :event_times_hash => event_times_hash,
+                                        :total_events => total_events}
     end
 
     not_found do
