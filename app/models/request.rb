@@ -3,9 +3,12 @@ module TrafficSpy
     belongs_to :source
     belongs_to :user_agent
 
+    def self.request_objects(identifier)
+      Request.where(source_id: Source.find_by(identifier: identifier).id)
+    end
+
     def self.urls(identifier)
-      request_objects = Request.where(source_id: Source.find_by(identifier: identifier).id)
-      raw_urls = request_objects.all.map do |request|
+      raw_urls = self.request_objects(identifier).all.map do |request|
         request.url
       end
 
@@ -19,8 +22,7 @@ module TrafficSpy
     end
 
     def self.browsers(identifier)
-      request_objects = Request.where(source_id: Source.find_by(identifier: identifier).id)
-      user_agent_ids = request_objects.all.map {|request_object| request_object.user_agent_id }
+      user_agent_ids = self.request_objects(identifier).all.map {|request_object| request_object.user_agent_id }
       user_agent_objects = user_agent_ids.map {|id| UserAgent.find(id)}
       browser_ids = user_agent_objects.map {|user_agent| user_agent.browser_id }
 
@@ -28,8 +30,7 @@ module TrafficSpy
     end
 
     def self.operating_systems(identifier)
-      request_objects = Request.where(source_id: Source.find_by(identifier: identifier).id)
-      user_agent_ids = request_objects.all.map {|request_object| request_object.user_agent_id }
+      user_agent_ids = self.request_objects(identifier).all.map {|request_object| request_object.user_agent_id }
       user_agent_objects = user_agent_ids.map {|id| UserAgent.find(id)}
       operating_system_ids = user_agent_objects.map {|user_agent| user_agent.operating_system_id }
 
@@ -37,15 +38,13 @@ module TrafficSpy
     end
 
     def self.screen_resolutions(identifier)
-      request_objects = Request.where(source_id: Source.find_by(identifier: identifier).id)
-      widths = request_objects.map {|ro| ro.resolution_width}
-      heights = request_objects.map {|ro| ro.resolution_height}
+      widths = self.request_objects(identifier).map {|ro| ro.resolution_width}
+      heights = self.request_objects(identifier).map {|ro| ro.resolution_height}
       widths_and_heights = widths.zip(heights)
     end
 
     def self.avg_response_times(identifier)
-      request_objects = Request.where(source_id: Source.find_by(identifier: identifier).id)
-      urls = request_objects.map {|request| request.url}.uniq
+      urls = self.request_objects(identifier).map {|request| request.url}.uniq
       requests_by_url = urls.map {|url| Request.where(url: url)}
       response_times = requests_by_url.map do |array|
         array.map {|request| request.responded_in}
@@ -97,9 +96,6 @@ module TrafficSpy
     end
 
     def self.popular_user_agents(identifier, relative_path)
-      #from the request objects, map the user_agent_ids
-      #rank by frequency
-      #then map the browser and os for each
       root_url = Source.find_by(identifier: identifier).root_url
       request_objects = Request.where(url: "#{root_url}/#{relative_path}")
       user_agent_ids = request_objects.map {|request| request.user_agent_id}
@@ -127,6 +123,17 @@ module TrafficSpy
       end
       sorted_hash = hash_with_frequency_as_values.sort_by {|key, value| value}.reverse
       ranked_events = sorted_hash.map {|pair| pair.first}
+    end
+
+    def self.event_times_hash(identifier, event_name)
+      requests_by_event = self.request_objects(identifier).select {|request| request.event_name == event_name}
+      request_times = requests_by_event.map {|request| request.requested_at}
+      request_hours_minutes_seconds = request_times.map {|time| time.split[1]}
+      request_hours = request_hours_minutes_seconds.map {|hms| hms.split(":").first}
+      hash_with_frequency_as_values = request_hours.each_with_object(Hash.new(0)) do |hour, hash|
+        hash[hour] += 1
+      end
+      sorted_hash = hash_with_frequency_as_values.sort_by {|key, value| key}
     end
   end
 end

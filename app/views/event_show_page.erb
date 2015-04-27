@@ -1,0 +1,6 @@
+<div id="times">
+<h1>Event Requests listed by Time for <%= event_name %>:</h1>
+<% event_times_hash.each do |hour, frequency| %>
+  <h2>Hour <%= hour %>:  <%= frequency %> requests</h2>
+<% end %>
+</div>

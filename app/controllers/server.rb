@@ -67,11 +67,17 @@ module TrafficSpy
       if Request.has_events?(identifier)
         events = Request.events(identifier)
         erb :events_index, :locals => {:identifier => identifier,
-                                       :events => events
-        }
+                                       :events => events}
       else
         erb :events_index_error
       end
+    end
+
+    get '/sources/:identifier/events/:event_name' do |identifier, event_name|
+      event_times_hash = Request.event_times_hash(identifier, event_name)
+      erb :event_show_page, :locals => {:event_name => event_name,
+                                        :identifier => identifier,
+                                        :event_times_hash => event_times_hash}
     end
 
     not_found do

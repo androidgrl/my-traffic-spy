@@ -2,7 +2,7 @@
 <h1>Events Index Ranked by most Popular:</h1>
 <% events.each_with_index do |event, index| %>
   <ul>
-    <li><%= index+1 %>.  <a href=""><%= event %></a></li>
+    <li><%= index+1 %>.  <a href="/sources/<%= identifier %>/events/<%= event %>"><%= event %></a></li>
   </ul>
 <% end %>
 </div>

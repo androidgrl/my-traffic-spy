@@ -34,5 +34,22 @@ class EventsPageTest < MiniTest::Test
                                2.  ContactEmail")
     end
   end
-
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
